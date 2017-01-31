@@ -1,7 +1,7 @@
 # Zip-Starter
 ### A Starter-Server for harvesting
 
-zip-starter is a single-route app that only accepts JSON POST requests. It's job is to create a "Starter" zip archive for adding data to, properlyconfigured according to the guide:
+zip-starter is a single-route app that only accepts JSON POST requests. Its job is to create a "Starter" zip archive for adding data to, properlyconfigured according to the guide:
 https://github.com/datarefugephilly/workflow/tree/master/harvesting-toolkit#3-generate-html-json--directory
 
 The archive derives it's name from the path posted to, or the "uuid" paremeter of the json document, favoring the json entry.
