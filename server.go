@@ -17,6 +17,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -56,13 +57,13 @@ func main() {
 
 		// Determine the name of the archive, favouring the "uuid" param
 		// if it exists in the json document
-		name := r.URL.Path
+		name := strings.Trim(r.URL.Path, "/")
 		if jsonName, ok := data["uuid"].(string); ok {
 			name = jsonName
 		}
 		if name == "" {
 			w.WriteHeader(http.StatusBadRequest)
-			io.WriteString(w, "please provide the name of the zip as the url path\n")
+			io.WriteString(w, "please provide the name of the zip as either the path you're posting to or a 'uuid' value in the json document\n")
 			return
 		}
 
