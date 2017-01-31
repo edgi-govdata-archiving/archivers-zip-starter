@@ -40,6 +40,7 @@ func main() {
 
 		// refuse anything that doesn't specify a json header
 		if r.Header.Get("Content-Type") != "application/json" {
+			fmt.Printf("Bad Content-Type: '%s'\n", r.Header.Get("Content-Type"))
 			w.WriteHeader(http.StatusBadRequest)
 			io.WriteString(w, "this server only accepts JSON POST requests\n")
 			return
