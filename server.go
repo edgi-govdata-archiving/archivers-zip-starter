@@ -32,6 +32,14 @@ func main() {
 		// log requests
 		fmt.Printf("%s - %s - %s\n", r.Method, time.Now().String(), r.URL.Path)
 
+		// support CORS from, well, anywhere.
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		if r.Method == "OPTIONS" {
+			return
+		}
+
 		// only allow POST requests
 		if r.Method != "POST" {
 			w.WriteHeader(http.StatusBadRequest)
