@@ -16,12 +16,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
 )
 
 func main() {
+	// get port from enviornment, default to port 3000
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
@@ -89,24 +91,10 @@ func main() {
 		}
 		jsonFile.Write(d)
 
-		// if the json doc specifies a url value, grab it from the internet
-		if jsonUrl, ok := data["url"].(string); ok {
-			res, err := http.Get(jsonUrl)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				io.WriteString(w, fmt.Sprintf("error fetching url '%s': %s", jsonUrl, err.Error()))
-				return
-			}
-
-			htmlFile, err := zw.Create(fmt.Sprintf("%s.html", name))
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				io.WriteString(w, err.Error())
-				return
-			}
-			defer res.Body.Close()
-
-			io.Copy(htmlFile, res.Body)
+		if _, err := FetchUrlIfExists(name, data, zw); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			io.WriteString(w, fmt.Sprintf("error fetching url '%s': %s", jsonFile, err.Error()))
+			return
 		}
 
 		// add data directory
@@ -140,4 +128,36 @@ func main() {
 	// spin up the server
 	fmt.Println("zip-starter server starting on port ", port)
 	http.ListenAndServe(":"+port, nil)
+}
+
+// FetchUrlIfExists looks at the "url" entry for the passed-in json. if it's a string, it checks to see
+// if it's a valid url. If so it'll grab the url & qrite it to the passed-in zip writer at the specified
+// name value with a .html extension
+func FetchUrlIfExists(name string, data map[string]interface{}, zw *zip.Writer) (bool, error) {
+	// if the json doc specifies a url value, grab it from the internet
+	if jsonUrl, ok := data["url"].(string); ok {
+		parsed, err := url.Parse(jsonUrl)
+		if err != nil {
+			return false, err
+		}
+		if !(parsed.Scheme == "http" || parsed.Scheme == "https") {
+			return false, nil
+		}
+
+		res, err := http.Get(parsed.String())
+		if err != nil {
+			return false, err
+		}
+
+		htmlFile, err := zw.Create(fmt.Sprintf("%s.html", name))
+		if err != nil {
+			return false, err
+		}
+		defer res.Body.Close()
+
+		_, err = io.Copy(htmlFile, res.Body)
+		return true, err
+	}
+
+	return false, nil
 }
