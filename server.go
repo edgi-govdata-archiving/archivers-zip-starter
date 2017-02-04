@@ -31,6 +31,12 @@ func main() {
 
 	// Or single handler
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.URL.Path)
+		if r.URL.Path == "/.well-known/acme-challenge/2FB9RNYgV71hNaqDyMihkHZSDMC07F6oFnqPl_AHVgQ" {
+			io.WriteString(w, "2FB9RNYgV71hNaqDyMihkHZSDMC07F6oFnqPl_AHVgQ.jQdiKuYU_45CqC8q3EZ_tNuby6Az7hqDw6J-wING8Vw")
+			return
+		}
+
 		// log requests
 		fmt.Printf("%s - %s - %s\n", r.Method, time.Now().String(), r.URL.Path)
 
