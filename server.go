@@ -32,8 +32,8 @@ func main() {
 	// Or single handler
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
-		if r.URL.Path == "/.well-known/acme-challenge/2FB9RNYgV71hNaqDyMihkHZSDMC07F6oFnqPl_AHVgQ" {
-			io.WriteString(w, "2FB9RNYgV71hNaqDyMihkHZSDMC07F6oFnqPl_AHVgQ.jQdiKuYU_45CqC8q3EZ_tNuby6Az7hqDw6J-wING8Vw")
+		if r.URL.Path == "/.well-known/acme-challenge/cvuZB8NI1DaELpDUiEFZ3P7QzeElPwu0mIq9ISWy7ko" {
+			io.WriteString(w, "cvuZB8NI1DaELpDUiEFZ3P7QzeElPwu0mIq9ISWy7ko.P7l0dmGqxO5Qj2kg5ujj39UuBGeo8V9NRqdrV1xFngk")
 			return
 		}
 
