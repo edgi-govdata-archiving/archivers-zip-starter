@@ -71,6 +71,9 @@ func main() {
 		if jsonName, ok := data["uuid"].(string); ok {
 			name = jsonName
 		}
+		if jsonName, ok := data["UUID"].(string); ok {
+			name = jsonName
+		}
 		if name == "" {
 			w.WriteHeader(http.StatusBadRequest)
 			io.WriteString(w, "please provide the name of the zip as either the path you're posting to or a 'uuid' value in the json document\n")
