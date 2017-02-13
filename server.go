@@ -86,7 +86,7 @@ func main() {
 
 		// write the actual json file
 		jsonFile, err := zw.Create(fmt.Sprintf("%s.json", name))
-		d, err := json.Marshal(data)
+		d, err := json.MarshalIndent(data, "", "\t")
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			io.WriteString(w, err.Error())
