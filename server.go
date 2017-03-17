@@ -147,9 +147,18 @@ func FetchUrlIfExists(name string, data map[string]interface{}, zw *zip.Writer) 
 			return false, nil
 		}
 
-		res, err := http.Get(parsed.String())
-		if err != nil {
-			return false, err
+		res, getErr := http.Get(parsed.String())
+		if getErr != nil {
+			// fetch-error urls are causing zip-starter to fail.
+			// so instead write that fetching failed to a file & bail without
+			// error
+			errFile, err := zw.Create(fmt.Sprintf("%s.error.txt", name))
+			if err != nil {
+				return false, err
+			}
+			errFile.Write([]byte(fmt.Sprintf("error fetching url: %s\n%s", parsed.String(), getErr.Error())))
+
+			return false, nil
 		}
 
 		htmlFile, err := zw.Create(fmt.Sprintf("%s.html", name))
