@@ -13,4 +13,4 @@ to [name].html
 * make sure you have go installed.
 * in a terminal navigate to this directory & run `go build`, a binary called zip-starter will be created in this folder
 * run `./zip-starter` from the terminal, a server will start
-* in another terminal try using `curl` to post to the server: ```curl -d "{ \"uuid\" : \"test-zip-starter\", \"url\" : \"http://www.epa.gov\"}" http://localhost:3000 > test-zip-starter.zip```
+* in another terminal try using `curl` to post to the server: ```curl -H "Content-Type: application/json" -d "{ \"uuid\" : \"test-zip-starter\", \"url\" : \"http://www.epa.gov\"}" http://localhost:3000 > test-zip-starter.zip```
